@@ -16,6 +16,14 @@
 <title>Pictgram</title>
 </head>
 <body>
+	<div th:if="${hasMessage}" class="alert alert-dismissible fade show"
+		th:classappend="${class}" role='alert'>
+		<button type="button" class="btn-close" data-bs-dismiss="alert"
+			aria-label="Close"></button>
+		<span th:text="${message}"></span>
+	</div>
+
+
 	<nav layout:replace="~{layouts/common :: nav}"></nav>
 	<div layout:fragment="contents"></div>
 	<script
@@ -24,6 +32,12 @@
 		crossorigin="anonymous"></script>
 	<script
 		src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<script>
+		$(function() {
+			$(".alert").fadeOut(5000);
+		});
+	</script>
+
 </body>
 </body>
 </html>
