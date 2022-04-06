@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja" xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
 <meta charset="UTF-8">
@@ -32,8 +33,11 @@
 		crossorigin="anonymous"></script>
 	<script
 		src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<script src="/scripts/method-convert.js"
+		th:src="@{/scripts/method-convert.js}"></script>
 	<script>
 		$(function() {
+			convertMethod('.convert');
 			$(".alert").fadeOut(5000);
 		});
 	</script>
