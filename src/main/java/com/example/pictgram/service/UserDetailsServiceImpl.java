@@ -14,9 +14,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
 	@Autowired
 	private UserRepository repository;
+	protected static Logger log = LoggerFactory.getLogger(UserDetailsServiceImpl.class);
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+
+		log.debug("username={}", username);
 
 		if (username == null || "".equals(username)) {
 			throw new UsernameNotFoundException("Username is empty");
