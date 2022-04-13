@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import org.springframework.context.MessageSource;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.io.FilenameUtils;
@@ -43,6 +44,9 @@ import com.example.pictgram.repository.TopicRepository;
 public class TopicsController {
 
 	protected static Logger log = LoggerFactory.getLogger(TopicsController.class);
+
+	@Autowired
+	private MessageSource messageSource;
 
 	@Autowired
 	private ModelMapper modelMapper;
@@ -131,12 +135,14 @@ public class TopicsController {
 	}
 
 	@RequestMapping(value = "/topic", method = RequestMethod.POST)
+
 	public String create(Principal principal, @Validated @ModelAttribute("form") TopicForm form, BindingResult result,
-			Model model, @RequestParam MultipartFile image, RedirectAttributes redirAttrs) throws IOException {
+			Model model, @RequestParam MultipartFile image, RedirectAttributes redirAttrs, Locale locale)
+			throws IOException {
 		if (result.hasErrors()) {
 			model.addAttribute("hasMessage", true);
 			model.addAttribute("class", "alert-danger");
-			model.addAttribute("message", "投稿に失敗しました。");
+			model.addAttribute("message", messageSource.getMessage("topics.create.flash.1", new String[] {}, locale));
 			return "topics/new";
 		}
 
@@ -161,7 +167,8 @@ public class TopicsController {
 
 		redirAttrs.addFlashAttribute("hasMessage", true);
 		redirAttrs.addFlashAttribute("class", "alert-info");
-		redirAttrs.addFlashAttribute("message", "投稿に成功しました。");
+		redirAttrs.addFlashAttribute("message",
+				messageSource.getMessage("topics.create.flash.2", new String[] {}, locale));
 
 		return "redirect:/topics";
 	}
