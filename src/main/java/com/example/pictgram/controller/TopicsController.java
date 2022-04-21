@@ -43,6 +43,7 @@ import com.example.pictgram.entity.Favorite;
 import com.example.pictgram.form.FavoriteForm;
 import com.example.pictgram.entity.Comment;
 import com.example.pictgram.form.CommentForm;
+import com.example.pictgram.service.S3Wrapper;
 
 @Controller
 public class TopicsController {
@@ -63,6 +64,15 @@ public class TopicsController {
 
 	@Value("${image.local:false}")
 	private String imageLocal;
+
+	@Value("${AWS_BUCKET}")
+	private String awsBucket;
+
+	@Value("${AWS_DEFAULT_REGION}")
+	private String awsDefaultRegion;
+
+	@Autowired
+	S3Wrapper s3;
 
 	@GetMapping(path = "/topics")
 	public String index(Principal principal, Model model) throws IOException {
@@ -85,7 +95,8 @@ public class TopicsController {
 		modelMapper.typeMap(Topic.class, TopicForm.class).addMappings(mapper -> mapper.skip(TopicForm::setUser));
 		modelMapper.typeMap(Topic.class, TopicForm.class).addMappings(mapper -> mapper.skip(TopicForm::setFavorites));
 		modelMapper.typeMap(Topic.class, TopicForm.class).addMappings(mapper -> mapper.skip(TopicForm::setComments));
-		modelMapper.typeMap(Favorite.class, FavoriteForm.class).addMappings(mapper -> mapper.skip(FavoriteForm::setTopic));
+		modelMapper.typeMap(Favorite.class, FavoriteForm.class)
+				.addMappings(mapper -> mapper.skip(FavoriteForm::setTopic));
 
 		boolean isImageLocal = false;
 		if (imageLocal != null) {
@@ -123,16 +134,15 @@ public class TopicsController {
 			}
 		}
 		form.setFavorites(favorites);
-		
-		
-		       List<CommentForm> comments = new ArrayList<CommentForm>();
-		
-		       for (Comment commentEntity : entity.getComments()) {
-		           CommentForm comment = modelMapper.map(commentEntity, CommentForm.class);
-		           comments.add(comment);
-		       }
-		       form.setComments(comments);
-		
+
+		List<CommentForm> comments = new ArrayList<CommentForm>();
+
+		for (Comment commentEntity : entity.getComments()) {
+			CommentForm comment = modelMapper.map(commentEntity, CommentForm.class);
+			comments.add(comment);
+		}
+		form.setComments(comments);
+
 		return form;
 	}
 
@@ -191,6 +201,12 @@ public class TopicsController {
 		entity.setDescription(form.getDescription());
 		repository.saveAndFlush(entity);
 
+		if (!isImageLocal) {
+			String url = saveImageS3(image, entity);
+			entity.setPath(url);
+			repository.saveAndFlush(entity);
+		}
+
 		redirAttrs.addFlashAttribute("hasMessage", true);
 		redirAttrs.addFlashAttribute("class", "alert-info");
 		redirAttrs.addFlashAttribute("message",
@@ -213,6 +229,18 @@ public class TopicsController {
 		image.transferTo(destFile);
 
 		return destFile;
+	}
+
+	private String saveImageS3(MultipartFile image, Topic entity) throws IOException {
+		String path = "uploads/topic/image/" + entity.getId() + "/" + image.getOriginalFilename();
+		s3.upload(image.getInputStream(), path);
+		String fileName = image.getOriginalFilename();
+		File destFile = File.createTempFile("s3_", ".tmp");
+		image.transferTo(destFile);
+
+		String url = "https://" + awsBucket + ".s3-" + awsDefaultRegion + ".amazonaws.com/" + path;
+
+		return url;
 	}
 
 }
