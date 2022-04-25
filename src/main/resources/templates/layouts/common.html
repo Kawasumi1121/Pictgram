@@ -6,9 +6,8 @@
 	<nav class="navbar navbar-expand-lg fixed-top navbar-dark"
 		layout:fragment="nav">
 		<div class="container">
-			<a class="navbar-brand" th:href="@{/topics}"> <img
-				src="/images/icons/logo.png" th:src="@{/images/icons/logo.png}"
-				class="brand">
+			<a class="navbar-brand" th:href="@{/topics}"> 
+			<img src="/images/icons/logo.png" th:src="@{/images/icons/logo.png}" class="brand">
 			</a>
 			<button class="navbar-toggler" type="button"
 				data-bs-toggle="collapse" data-bs-target="#navbarNav"
@@ -20,35 +19,30 @@
 				<ul class="navbar-nav ms-auto">
 
 					<th:block sec:authorize="isAuthenticated()">
-						<li class="nav-item"><a class="nav-link"
-							th:href="@{/calendars}">
-							 <img src="/images/icons/calendar.png"
-								  th:src="@{/images/icons/calendar.png}">
+						<li class="nav-item"><a class="nav-link" th:href="@{/calendars}">
+							 <img src="/images/icons/calendar.png" th:src="@{/images/icons/calendar.png}">
 						</a></li>
-						<li class="nav-item"><a class="nav-link"
-							th:href="@{/favorites}"> <img src="/images/icons/heart.png"
-								th:src="@{/images/icons/heart.png}">
+						<li class="nav-item"><a class="nav-link" th:href="@{/favorites}"> 
+						<img src="/images/icons/heart.png" th:src="@{/images/icons/heart.png}">
 						</a></li>
-						<li class="nav-item"><a class="nav-link"
-							th:href="@{/topics/new}"> <img src="/images/icons/camera.png"
-								th:src="@{/images/icons/camera.png}">
+						<li class="nav-item"><a class="nav-link" th:href="@{/topics/new}">
+						<img src="/images/icons/camera.png"	th:src="@{/images/icons/camera.png}">
 						</a></li>
 						<li class="nav-item"><a th:href="@{/logout}"
 							class="nav-link convert" data-method="post"
-							th:data-_csrf="${_csrf.token}"> <img
-								src="/images/icons/logout.png"
-								th:src="@{/images/icons/logout.png}">
-						</a></li>
+							th:data-_csrf="${_csrf.token}">
+						<img src="/images/icons/logout.png" th:src="@{/images/icons/logout.png}">
+						</a>
+						</li>
 					</th:block>
 					<th:block sec:authorize="!isAuthenticated()">
-						<li class="nav-item"><a class="nav-link"
-							th:href="@{/users/new}"> <img
-								src="/images/icons/register.png"
-								th:src="@{/images/icons/register.png}">
-						</a></li>
+						<li class="nav-item">
+						<a class="nav-link"	th:href="@{/users/new}">
+						<img src="/images/icons/register.png" th:src="@{/images/icons/register.png}">
+						</a>
+						</li>
 						<li class="nav-item"><a class="nav-link" th:href="@{/login}">
-								<img src="/images/icons/login.png"
-								th:src="@{/images/icons/login.png}">
+						<img src="/images/icons/login.png" th:src="@{/images/icons/login.png}">
 						</a></li>
 					</th:block>
 
@@ -56,11 +50,9 @@
 			</div>
 		</div>
 	</nav>
-	<div id="messages" layout:fragment="messages"
-		th:if="!${#lists.isEmpty(#fields.detailedErrors())}">
+	<div id="messages" layout:fragment="messages" th:if="!${#lists.isEmpty(#fields.detailedErrors())}">
 		<ul>
-			<li th:each="error : ${#fields.detailedErrors()}"
-				class="error-message" th:text="${error.message}" />
+			<li th:each="error : ${#fields.detailedErrors()}" class="error-message" th:text="${error.message}" />
 		</ul>
 	</div>
 </body>
