@@ -218,15 +218,12 @@ public class TopicsController {
 		redirAttrs.addFlashAttribute("message",
 				messageSource.getMessage("topics.create.flash.2", new String[] {}, locale));
 		
-		Context context = new Context();
-		
+		Context context = new Context();		
 		context.setVariable("title", "【Pictgram】新規投稿");
 		context.setVariable("name", user.getUsername());
 		context.setVariable("description", entity.getDescription());
-		
-		
 		sendMailService.sendMail(context);
-
+		
 		return "redirect:/topics";
 	}
 

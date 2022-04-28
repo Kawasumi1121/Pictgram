@@ -7,17 +7,7 @@ spring:
    multipart:
     max-file-size: 20MB
     max-request-size: 20MB
-     
-cloud:
-  aws:
-    stack:
-      auto: false
-    region:
-      auto: false
-      static: ap-northeast-1
-onesignal:
-   id: ${onesignal.id}
-
+    
 mail:
     default-encoding: UTF-8
     protocol: smtp
@@ -33,3 +23,14 @@ mail:
             enable: true
 thymeleaf:
     check-template-location: false 
+     
+cloud:
+  aws:
+    stack:
+      auto: false
+    region:
+      auto: false
+      static: ap-northeast-1
+onesignal:
+   id: ${onesignal.id}
+
