@@ -1,6 +1,7 @@
 package com.example.pictgram.controller;
 
 import java.io.ByteArrayOutputStream;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -44,6 +45,8 @@ import com.example.pictgram.form.FavoriteForm;
 import com.example.pictgram.entity.Comment;
 import com.example.pictgram.form.CommentForm;
 import com.example.pictgram.service.S3Wrapper;
+import org.thymeleaf.context.Context;
+import com.example.pictgram.service.SendMailService;
 
 @Controller
 public class TopicsController {
@@ -74,6 +77,9 @@ public class TopicsController {
 	@Autowired
 	S3Wrapper s3;
 
+	@Autowired
+	private SendMailService sendMailService;
+	
 	@GetMapping(path = "/topics")
 	public String index(Principal principal, Model model) throws IOException {
 		Authentication authentication = (Authentication) principal;
@@ -211,6 +217,9 @@ public class TopicsController {
 		redirAttrs.addFlashAttribute("class", "alert-info");
 		redirAttrs.addFlashAttribute("message",
 				messageSource.getMessage("topics.create.flash.2", new String[] {}, locale));
+		
+		Context context = new Context();
+		sendMailService.sendMail(context);
 
 		return "redirect:/topics";
 	}
