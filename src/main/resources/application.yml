@@ -7,6 +7,15 @@ spring:
    multipart:
     max-file-size: 20MB
     max-request-size: 20MB 
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${google.client.id}
+            client-secret: ${google.client.secret}
+googlemap:
+    key: ${googlemap.key} 
 cloud:
    aws:
      stack:
@@ -17,8 +26,8 @@ cloud:
 
 　　onesignal:
   　　id: ${onesignal.id}  
-googlemap:
-  key: ${googlemap.key}
+ 
+
 #mail:
 #    default-encoding: UTF-8
 #    protocol: smtp
