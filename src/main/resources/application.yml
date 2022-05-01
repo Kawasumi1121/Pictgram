@@ -6,14 +6,27 @@ spring:
   servlet:
    multipart:
     max-file-size: 20MB
-    max-request-size: 20MB
-     
+    max-request-size: 20MB 
 cloud:
-  aws:
-    stack:
-      auto: false
-    region:
-      auto: false
-      static: ap-northeast-1
-onesignal:
-   id: ${onesignal.id}
+   aws:
+     stack:
+       auto: false
+     region:
+       auto: false
+       static: ap-northeast-1
+
+　　onesignal:
+  　　id: ${onesignal.id}  
+googlemap:
+  key: ${googlemap.key}
+#mail:
+#    default-encoding: UTF-8
+#    protocol: smtp
+#    host: ${spring.mail.host}
+#    port: ${spring.mail.port}
+#    username: ${spring.mail.username}
+#    password: ${spring.mail.password}
+#    properties.mail.smtp.auth: true
+#    properties.mail.smtp.starttls.enable: true
+#thymeleaf:
+#    check-template-location: false
