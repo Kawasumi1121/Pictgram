@@ -16,6 +16,15 @@ import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 import com.example.pictgram.filter.FormAuthenticationProvider;
 import com.example.pictgram.repository.UserRepository;
+import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest;
+import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService;
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
+import org.springframework.security.oauth2.core.OAuth2AccessToken;
+import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
+import com.example.pictgram.entity.SocialUser;
+import com.example.pictgram.entity.User;
+import com.example.pictgram.entity.User.Authority;
 
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -56,7 +65,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                 // form
                 .and().formLogin().loginPage("/login").defaultSuccessUrl("/topics").failureUrl("/login-failure")
-                .permitAll();
+                // oauth2
+                .and().oauth2Login().loginPage("/login").defaultSuccessUrl("/topics").failureUrl("/login-failure")
+                .permitAll()
+                .userInfoEndpoint(userInfoEndpoint -> userInfoEndpoint
+                .oidcUserService(this.oidcUserService())
+                               );
         // @formatter:on
 	}
 
@@ -70,4 +84,25 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		return new BCryptPasswordEncoder();
 	}
 
+	public OAuth2UserService<OidcUserRequest, OidcUser> oidcUserService() {
+		final OidcUserService delegate = new OidcUserService();
+		return (userRequest) -> {
+			OidcUser oidcUser = delegate.loadUser(userRequest);
+			OAuth2AccessToken accessToken = userRequest.getAccessToken();
+
+			log.debug("accessToken={}", accessToken);
+
+			oidcUser = new DefaultOidcUser(oidcUser.getAuthorities(), oidcUser.getIdToken(), oidcUser.getUserInfo());
+			String email = oidcUser.getEmail();
+			User user = repository.findByUsername(email);
+			if (user == null) {
+				user = new User(email, oidcUser.getFullName(), "", Authority.ROLE_USER);
+				repository.saveAndFlush(user);
+			}
+			oidcUser = new SocialUser(oidcUser.getAuthorities(), oidcUser.getIdToken(), oidcUser.getUserInfo(),
+					user.getUserId());
+
+			return oidcUser;
+		};
+	}
 }
