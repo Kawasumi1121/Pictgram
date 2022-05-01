@@ -44,8 +44,8 @@ import com.example.pictgram.form.FavoriteForm;
 import com.example.pictgram.entity.Comment;
 import com.example.pictgram.form.CommentForm;
 import com.example.pictgram.service.S3Wrapper;
-import org.thymeleaf.context.Context;
-import com.example.pictgram.service.SendMailService;
+//import org.thymeleaf.context.Context;
+//import com.example.pictgram.service.SendMailService;
 
 @Controller
 public class TopicsController {
