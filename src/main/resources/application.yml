@@ -16,7 +16,9 @@ cloud:
        static: ap-northeast-1
 
 　　onesignal:
-  　　id: ${onesignal.id}
+  　　id: ${onesignal.id}  
+googlemap:
+  key: ${googlemap.key}
 #mail:
 #    default-encoding: UTF-8
 #    protocol: smtp
