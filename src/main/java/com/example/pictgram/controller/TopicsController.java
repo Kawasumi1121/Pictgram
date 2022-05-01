@@ -1,7 +1,6 @@
 package com.example.pictgram.controller;
 
 import java.io.ByteArrayOutputStream;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -76,10 +75,10 @@ public class TopicsController {
 
 	@Autowired
 	S3Wrapper s3;
-
-	@Autowired
-	private SendMailService sendMailService;
 	
+//	@Autowired
+//	private SendMailService sendMailService;
+
 	@GetMapping(path = "/topics")
 	public String index(Principal principal, Model model) throws IOException {
 		Authentication authentication = (Authentication) principal;
@@ -217,12 +216,10 @@ public class TopicsController {
 		redirAttrs.addFlashAttribute("class", "alert-info");
 		redirAttrs.addFlashAttribute("message",
 				messageSource.getMessage("topics.create.flash.2", new String[] {}, locale));
+
 		
-		Context context = new Context();		
-		context.setVariable("title", "【Pictgram】新規投稿");
-		context.setVariable("name", user.getUsername());
-		context.setVariable("description", entity.getDescription());
-		sendMailService.sendMail(context);
+//		Context context = new Context();
+//		sendMailService.sendMail(context);
 		
 		return "redirect:/topics";
 	}
