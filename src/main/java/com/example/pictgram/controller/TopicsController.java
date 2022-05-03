@@ -63,6 +63,7 @@ import org.springframework.http.MediaType;
 import com.example.pictgram.bean.TopicCsv;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
+import org.springframework.http.ResponseEntity;
 
 //import org.thymeleaf.context.Context;
 //import com.example.pictgram.service.SendMailService;
@@ -111,6 +112,10 @@ public class TopicsController {
 			list.add(form);
 		}
 		model.addAttribute("list", list);
+		model.addAttribute("hasFooter", true);
+		ResponseEntity<byte[]> entity = s3.download("tags");
+		String body = new String(entity.getBody());
+		model.addAttribute("tags", body.split(System.getProperty("line.separator")));
 
 		return "topics/index";
 	}

@@ -1,6 +1,7 @@
 package com.example.pictgram.controller;
 
 import java.io.IOException;
+
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +27,7 @@ import com.example.pictgram.entity.UserInf;
 import com.example.pictgram.form.TopicForm;
 import com.example.pictgram.repository.FavoriteRepository;
 import com.example.pictgram.service.S3Wrapper;
+import org.springframework.http.ResponseEntity;
 
 @Controller
 public class FavoritesController {
@@ -53,7 +55,10 @@ public class FavoritesController {
 			list.add(form);
 		}
 		model.addAttribute("list", list);
-
+		model.addAttribute("hasFooter", true);
+		ResponseEntity<byte[]> entity = s3.download("tags");
+		String body = new String(entity.getBody());
+		model.addAttribute("tags", body.split(System.getProperty("line.separator")));
 		return "topics/index";
 	}
 
