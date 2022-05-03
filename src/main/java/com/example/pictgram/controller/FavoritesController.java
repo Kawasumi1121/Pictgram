@@ -25,6 +25,7 @@ import com.example.pictgram.entity.Topic;
 import com.example.pictgram.entity.UserInf;
 import com.example.pictgram.form.TopicForm;
 import com.example.pictgram.repository.FavoriteRepository;
+import com.example.pictgram.service.S3Wrapper;
 
 @Controller
 public class FavoritesController {
@@ -37,7 +38,9 @@ public class FavoritesController {
 
 	@Autowired
 	private TopicsController topicsController;
-
+	@Autowired
+	S3Wrapper s3;
+	
 	@GetMapping(path = "/favorites")
 	public String index(Principal principal, Model model) throws IOException {
 		Authentication authentication = (Authentication) principal;
