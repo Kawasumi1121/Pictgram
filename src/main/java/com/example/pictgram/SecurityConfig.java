@@ -1,6 +1,7 @@
 package com.example.pictgram;
 
 import org.slf4j.Logger;
+
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -25,6 +26,9 @@ import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import com.example.pictgram.entity.SocialUser;
 import com.example.pictgram.entity.User;
 import com.example.pictgram.entity.User.Authority;
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
+import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -70,6 +74,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 .userInfoEndpoint(userInfoEndpoint -> userInfoEndpoint
                 .oidcUserService(this.oidcUserService())
+                .userService(this.oauth2UserService())
                                );
         // @formatter:on
 	}
@@ -104,5 +109,26 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 			return oidcUser;
 		};
+		
 	}
+	
+    public OAuth2UserService<OAuth2UserRequest, OAuth2User> oauth2UserService() {
+        DefaultOAuth2UserService delegate = new DefaultOAuth2UserService();
+        return request -> {
+            OAuth2User oauth2User = delegate.loadUser(request);
+
+            log.debug(oauth2User.toString());
+
+            String name = oauth2User.getAttribute("login");
+            User user = repository.findByUsername(name);
+            if (user == null) {
+                user = new User(name, name, "", Authority.ROLE_USER);
+                repository.saveAndFlush(user);
+            }
+            SocialUser socialUser = new SocialUser(oauth2User.getAuthorities(), oauth2User.getAttributes(), "id",
+                    user.getUserId());
+
+            return socialUser;
+        };
+    }
 }
