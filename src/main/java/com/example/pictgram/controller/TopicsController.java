@@ -244,7 +244,9 @@ public class TopicsController {
 
 		
 		Context context = new Context();
-		
+		context.setVariable("title", "【Pictgram】新規投稿");
+		context.setVariable("name", user.getUsername());
+		context.setVariable("description", entity.getDescription());
 		sendMailService.sendMail(context);
 		
 		return "redirect:/topics";
