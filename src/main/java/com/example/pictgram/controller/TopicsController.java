@@ -65,8 +65,8 @@ import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 import org.springframework.http.ResponseEntity;
 
-//import org.thymeleaf.context.Context;
-//import com.example.pictgram.service.SendMailService;
+import org.thymeleaf.context.Context;
+import com.example.pictgram.service.SendMailService;
 
 @Controller
 public class TopicsController {
@@ -97,8 +97,8 @@ public class TopicsController {
 	@Autowired
 	S3Wrapper s3;
 	
-//	@Autowired
-//	private SendMailService sendMailService;
+	@Autowired
+	private SendMailService sendMailService;
 
 	@GetMapping(path = "/topics")
 	public String index(Principal principal, Model model) throws IOException {
@@ -243,8 +243,9 @@ public class TopicsController {
 				messageSource.getMessage("topics.create.flash.2", new String[] {}, locale));
 
 		
-//		Context context = new Context();
-//		sendMailService.sendMail(context);
+		Context context = new Context();
+		
+		sendMailService.sendMail(context);
 		
 		return "redirect:/topics";
 	}
