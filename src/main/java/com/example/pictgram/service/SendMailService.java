@@ -32,25 +32,25 @@ public class SendMailService {
 				helper.setSubject((String) context.getVariable("title"));
 				helper.setText(getMailBody("email", context), true);
             }
-        	private String getMailBody(String templateName, Context context) {
-        		SpringTemplateEngine templateEngine = new SpringTemplateEngine();
-        		templateEngine.setTemplateResolver(mailTemplateResolver());
-        		return templateEngine.process(templateName, context);
-        	}
 
-        	private ClassLoaderTemplateResolver mailTemplateResolver() {
-        		ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
-        		templateResolver.setTemplateMode(TemplateMode.HTML);
-        		templateResolver.setPrefix("mailtemplates/");
-        		templateResolver.setSuffix(".html");
-        		templateResolver.setCharacterEncoding("UTF-8");
-        		templateResolver.setCacheable(true);
-        		return templateResolver;
-        	}
         });
 
     }
 
 
+	private String getMailBody(String templateName, Context context) {
+		SpringTemplateEngine templateEngine = new SpringTemplateEngine();
+		templateEngine.setTemplateResolver(mailTemplateResolver());
+		return templateEngine.process(templateName, context);
+	}
 
+	private ClassLoaderTemplateResolver mailTemplateResolver() {
+		ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
+		templateResolver.setTemplateMode(TemplateMode.HTML);
+		templateResolver.setPrefix("mailtemplates/");
+		templateResolver.setSuffix(".html");
+		templateResolver.setCharacterEncoding("UTF-8");
+		templateResolver.setCacheable(true);
+		return templateResolver;
+	}
 }
