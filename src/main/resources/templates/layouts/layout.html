@@ -32,6 +32,7 @@
 		<div class="container">
 			<div class="row">
 				<!-- 広告のソースを貼り付ける -->
+				<div class="col-md-4" th:each="tag : ${tags}" th:utext="${tag}"></div> 
 			</div>
 		</div>
 	</footer>
