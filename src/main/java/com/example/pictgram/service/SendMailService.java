@@ -23,8 +23,8 @@ public class SendMailService {
             @Override
             public void prepare(MimeMessage mimeMessage) throws Exception {
                 MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, StandardCharsets.UTF_8.name());
-                helper.setFrom("elkkuelkku1121@gmail.com");
-                helper.setTo("elkkuelkku1121@gmail.com");
+                helper.setFrom("[Gmail の E メールアドレス]");
+                helper.setTo("[Gmail の E メールアドレス]");
                 helper.setSubject("タイトル");
                 helper.setText("本文");
             }
